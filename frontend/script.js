@@ -32,8 +32,8 @@ document.getElementById('word-form').addEventListener('submit', function(event) 
 
                 // Handle image
                 const wordImage = document.getElementById('word-image');
-                if (data.image_url) {
-                    wordImage.src = data.image_url;
+                if (data.imageUrl) {
+                    wordImage.src = data.imageUrl;
                     wordImage.alt = `Decoding image for ${data.word}`;
                     wordImage.style.display = 'block';
                 } else {
