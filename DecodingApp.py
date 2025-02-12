@@ -15,7 +15,7 @@ if not mongodb_uri:
     raise ValueError("MONGODB_URI is not set in the environment variables.")
 
 try:
-    client = MongoClient(mongodb_uri)
+    client = MongoClient(mongodb_uri, tls=True, tlsAllowInvalidCertificates=True)
     db = client.get_default_database()
     word_collection = db['words']  # Replace with your collection name
 except Exception as e:
@@ -47,5 +47,5 @@ def get_word_info():
         return jsonify({'error': 'An error occurred'}), 500
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 10000))  # Default to 10000 if PORT is not set
+    port = int(os.environ.get('PORT', 10000))
     app.run(host='0.0.0.0', port=port, debug=True)
