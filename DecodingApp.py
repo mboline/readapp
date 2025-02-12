@@ -49,7 +49,7 @@ def get_word_info():
         response_data = {
             'word': word_info.get('word', ''),
             'decodedInfo': word_info.get('decodedInfo', ''),
-            'imageURL': word_info.get('imageURL', ''),
+            'imageUrl': word_info.get('imageUrl', ''),
             'audio_url': word_info.get('audio_url', '')  # Include audio URL if available
         }
         
