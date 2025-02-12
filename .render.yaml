@@ -1,0 +1,8 @@
+services:
+- type: web
+  name: decoding-app
+  env: python
+  region: oregon
+  plan: starter
+  buildCommand: pip install -r requirements.txt
+  startCommand: python DecodingApp.py
