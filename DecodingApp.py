@@ -22,6 +22,10 @@ except Exception as e:
     logger.error(f"Failed to connect to MongoDB: {str(e)}")
     raise
 
+@app.route('/')
+def home():
+    return 'Welcome to the Decoding App!'
+
 @app.route('/api/get-word-info', methods=['GET'])
 def get_word_info():
     try:
@@ -43,5 +47,5 @@ def get_word_info():
         return jsonify({'error': 'An error occurred'}), 500
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 10000))
+    port = int(os.environ.get('PORT', 10000))  # Default to 10000 if PORT is not set
     app.run(host='0.0.0.0', port=port, debug=True)
