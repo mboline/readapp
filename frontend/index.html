@@ -4,51 +4,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reading Assistant App</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Reading Assistant</assistant="assistant">
+    <style>
+        hr {
+            border: 1px solid #ccc;
+            margin: 20px 0;
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome to the Reading Assistant App</h1>
-
-    <!-- Form to input a word -->
+    <h1>Reading Assistant</h1>
     <form id="word-form">
         <label for="word-input">Enter a word:</label>
-        <input type="text" id="word-input" name="word" required>
-        <button type="submit">Get Word Info</button>
+        <input type="text" id="word-input" name="word-input">
+        <button type="submit">Submit</button>
     </form>
-
-    <!-- Form to search for a phonogram -->
-    <form id="phonogram-search-form" style="display: none;">
-        <label for="phonogram-input">Enter a phonogram:</label>
-        <input type="text" id="phonogram-input" name="phonogram" required>
-        <button type="submit">Search Phonogram</button>
-    </form>
-
-    <!-- Section to display word information -->
-    <div id="word-info" style="display: none;"> <!-- Initially hidden -->
+    <div id="word-info">
         <h2 id="word-title"></h2>
         <p id="word-explanation"></p>
-        <img id="word-image" src="" alt="Decoding image" style="max-width: 100%; height: auto; display: none;">
-        <audio id="word-audio" controls style="display: none;"> <!-- Initially hidden -->
-            <source id="audio-source" src="" type="audio/mpeg">
-            Your browser does not support the audio element.
+        <img id="word-image" src="" alt="Word image">
+        <audio id="word-audio" controls>
+            <source id="audio-source" type="audio/mp3">
         </audio>
     </div>
-
-    <!-- Section to display phonogram information -->
-    <div id="phonogram-info" style="display: none;"> <!-- Initially hidden -->
+    <form id="phonogram-search-form">
+        <label for="phonogram-input">Enter a phonogram:</label>
+        <input type="text" id="phonogram-input" name="phonogram-input">
+        <button type="submit">Submit</button>
+    </form>
+    <div id="phonogram-info">
         <h2 id="phonogram-title"></h2>
         <p id="phonogram-explanation"></p>
-        <audio id="phonogram-audio" controls style="display: none;"> <!-- Initially hidden -->
-            <source id="phonogram-source" src="" type="audio/mpeg">
-            Your browser does not support the audio element.
+        <audio id="phonogram-audio" controls>
+            <source id="phonogram-source" type="audio/mp3">
         </audio>
     </div>
+    <hr>
+    <div id="phonogram-search-form-results">
+        <p>Phonogram: <span id="phonogram-value"></span></p>
+        <p>Sample words: <span id="sample-words"></span></p>
+    </div>
 
-    <!-- Error message placeholder -->
-    <p id="error-message" style="color: red; display: none;"></p>
+    <p id="error-message"></p>
 
-    <!-- Link to external JavaScript file -->
     <script src="script.js"></script>
 </body>
 </html>
