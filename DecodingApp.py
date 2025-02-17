@@ -1,3 +1,4 @@
+
 from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 from pymongo import MongoClient
@@ -26,6 +27,7 @@ if not mongodb_uri:
 client = MongoClient(mongodb_uri)
 db = client.get_database('WordInfo')  # Specify the database name
 word_collection = db.get_collection('Words')  # Specify the collection name
+phonogram_collection = db.get_collection('Phonograms')  # Specify the phonogram collection name
 
 # Log the database name to verify the connection
 logger.info(f"Connected to database: {db.name}")
@@ -59,6 +61,62 @@ def get_word_info():
     else:
         logger.info(f"Word not found: {word}")
         return jsonify({'message': 'Word not found'}), 404
+
+@app.route('/api/get-phonogram-info', methods=['GET'])
+def get_phonogram_info():
+    phonogram = request.args.get('phonogram')
+    if not phonogram:
+        return jsonify({'message': 'Phonogram parameter is required'}), 400
+    
+    logger.info(f"Fetching phonogram info for: {phonogram}")
+    
+    # Use a case-insensitive regular expression to find the phonogram
+    phonogram_info = phonogram_collection.find_one({'phonogram': re.compile(f'^{phonogram}$', re.IGNORECASE)})
+    
+    if phonogram_info:
+        # Convert ObjectId to string for JSON serialization
+        phonogram_info['_id'] = str(phonogram_info['_id'])
+        
+        # Ensure all fields are included in the response, even if they are missing in the database
+        response_data = {
+            'phonogram_url': phonogram_info.get('phonogram_url', ''),
+            'sample_words': phonogram_info.get('samplewords', '')
+        }
+        
+        logger.info(f"Phonogram info found: {response_data}")
+        return jsonify(response_data), 200
+    
+    else:
+        logger.info(f"Phonogram not found: {phonogram}")
+        return jsonify({'message': 'Phonogram not found'}), 404
+
+@app.route('/api/search-phonogram', methods=['GET'])
+def search_phonogram():
+    phonogram = request.args.get('phonogram')
+    if not phonogram:
+        return jsonify({'message': 'Phonogram parameter is required'}), 400
+    
+    logger.info(f"Searching for phonogram: {phonogram}")
+    
+    # Use a case-insensitive regular expression to find the phonogram
+    phonogram_info = phonogram_collection.find_one({'phonogram': re.compile(f'^{phonogram}$', re.IGNORECASE)})
+    
+    if phonogram_info:
+        # Convert ObjectId to string for JSON serialization
+        phonogram_info['_id'] = str(phonogram_info['_id'])
+        
+        # Ensure all fields are included in the response, even if they are missing in the database
+        response_data = {
+            'phonogram_url': phonogram_info.get('phonogram_url', ''),
+            'sample_words': phonogram_info.get('samplewords', '')
+        }
+        
+        logger.info(f"Phonogram info found: {response_data}")
+        return jsonify(response_data), 200
+    
+    else:
+        logger.info(f"Phonogram not found: {phonogram}")
+        return jsonify({'message': 'Phonogram not found'}), 404
 
 @app.route('/')
 def serve_frontend():

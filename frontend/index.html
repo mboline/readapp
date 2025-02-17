@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,6 +17,13 @@
         <button type="submit">Get Word Info</button>
     </form>
 
+    <!-- Form to search for a phonogram -->
+    <form id="phonogram-search-form" style="display: none;">
+        <label for="phonogram-input">Enter a phonogram:</label>
+        <input type="text" id="phonogram-input" name="phonogram" required>
+        <button type="submit">Search Phonogram</button>
+    </form>
+
     <!-- Section to display word information -->
     <div id="word-info" style="display: none;"> <!-- Initially hidden -->
         <h2 id="word-title"></h2>
@@ -23,6 +31,16 @@
         <img id="word-image" src="" alt="Decoding image" style="max-width: 100%; height: auto; display: none;">
         <audio id="word-audio" controls style="display: none;"> <!-- Initially hidden -->
             <source id="audio-source" src="" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+    </div>
+
+    <!-- Section to display phonogram information -->
+    <div id="phonogram-info" style="display: none;"> <!-- Initially hidden -->
+        <h2 id="phonogram-title"></h2>
+        <p id="phonogram-explanation"></p>
+        <audio id="phonogram-audio" controls style="display: none;"> <!-- Initially hidden -->
+            <source id="phonogram-source" src="" type="audio/mpeg">
             Your browser does not support the audio element.
         </audio>
     </div>
