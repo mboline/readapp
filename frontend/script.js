@@ -1,3 +1,4 @@
+
 document.getElementById('word-form').addEventListener('submit', function(event) {
     event.preventDefault(); // Prevent the default form submission
 
@@ -95,10 +96,6 @@ document.getElementById('phonogram-search-form').addEventListener('submit', func
                 errorMessage.textContent = data.message;
                 errorMessage.style.display = 'block';
             } else {
-                // Populate phonogram information
-                document.getElementById('phonogram-title').textContent = `Phonogram: ${data.phonogram_name}`;
-                document.getElementById('phonogram-explanation').textContent = data.sample_words;
-
                 // Handle audio
                 const phonogramAudio = document.getElementById('phonogram-audio');
                 const phonogramSource = document.getElementById('phonogram-source');
