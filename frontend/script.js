@@ -96,6 +96,10 @@ document.getElementById('phonogram-search-form').addEventListener('submit', func
                 errorMessage.textContent = data.message;
                 errorMessage.style.display = 'block';
             } else {
+                // Populate phonogram information
+                document.getElementById('phonogram-title').textContent = `Phonogram: ${data.phonogram}`;
+                document.getElementById('phonogram-explanation').textContent = data.sample_words;
+
                 // Handle audio
                 const phonogramAudio = document.getElementById('phonogram-audio');
                 const phonogramSource = document.getElementById('phonogram-source');
@@ -109,16 +113,11 @@ document.getElementById('phonogram-search-form').addEventListener('submit', func
 
                 // Show the phonogram info section
                 phonogramInfoDiv.style.display = 'block';
-
-                // Populate phonogram information
-                document.getElementById('phonogram-title').textContent = `Phonogram: ${data.sample_words}`;
-                document.getElementById('phonogram-explanation').textContent = data.sample_words;
-
-                // Show the phonogram sample words
-                document.getElementById('phonogram-sample-words').textContent = `Sample words: ${data.sample_words}`;
-                document.getElementById('phonogram-sample-words').style.display = 'block';
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            errorMessage.textContent
+            errorMessage.textContent = 'An error occurred while fetching phonogram information.';
+            errorMessage.style.display = 'block';
+        });
+});
