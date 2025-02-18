@@ -21,6 +21,9 @@ document.getElementById('word-form').addEventListener('submit', function(event) 
     const phonogramSource = document.getElementById('phonogram-source');
     phonogramSource.src = ''; // Reset the phonogram audio source
 
+    // Clear the phonogram search input field
+    document.getElementById('phonogram-input').value = ''; // Clear phonogram search input
+
     console.log(`Fetching word info for: ${wordInput}`);
 
     fetch(`/api/get-word-info?word=${encodeURIComponent(wordInput)}`)
@@ -106,7 +109,7 @@ document.getElementById('phonogram-search-form').addEventListener('submit', func
                 errorMessage.style.display = 'block';
             } else {
                 // Populate phonogram information
-                //document.getElementById('phonogram-title').textContent = `Phonogram: ${data.phonogram}`;
+                document.getElementById('phonogram-title').textContent = `Phonogram: ${data.phonogram}`;
                 document.getElementById('phonogram-explanation').textContent = data.sample_words;
 
                 // Handle audio
