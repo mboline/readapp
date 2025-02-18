@@ -110,7 +110,7 @@ document.getElementById('phonogram-search-form').addEventListener('submit', func
             } else {
                 // Populate phonogram information
                 //document.getElementById('phonogram-title').textContent = `Phonogram: ${data.phonogram}`;
-                document.getElementById('phonogram-explanation').textContent = data.sample_words;
+                document.getElementById('phonogram-explanation').textContent = `Sample words: ${data.sample_words}`;
 
                 // Handle audio
                 const phonogramAudio = document.getElementById('phonogram-audio');
