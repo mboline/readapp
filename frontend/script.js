@@ -1,16 +1,25 @@
-
 document.getElementById('word-form').addEventListener('submit', function(event) {
     event.preventDefault(); // Prevent the default form submission
 
     const wordInput = document.getElementById('word-input').value.trim();
     const wordInfoDiv = document.getElementById('word-info');
     const phonogramSearchForm = document.getElementById('phonogram-search-form');
+    const phonogramInfoDiv = document.getElementById('phonogram-info'); // Reference to phonogram info section
     const errorMessage = document.getElementById('error-message');
 
-    // Clear previous content
+    // Clear previous word info and phonogram info
     wordInfoDiv.style.display = 'none';
     phonogramSearchForm.style.display = 'none';
+    phonogramInfoDiv.style.display = 'none'; // Hide the phonogram info section
     errorMessage.style.display = 'none';
+
+    // Clear any previously displayed phonogram data
+    document.getElementById('phonogram-title').textContent = ''; // Clear phonogram title
+    document.getElementById('phonogram-explanation').textContent = ''; // Clear phonogram explanation
+    const phonogramAudio = document.getElementById('phonogram-audio');
+    phonogramAudio.style.display = 'none'; // Hide phonogram audio controls
+    const phonogramSource = document.getElementById('phonogram-source');
+    phonogramSource.src = ''; // Reset the phonogram audio source
 
     console.log(`Fetching word info for: ${wordInput}`);
 
@@ -75,7 +84,7 @@ document.getElementById('phonogram-search-form').addEventListener('submit', func
     const phonogramInfoDiv = document.getElementById('phonogram-info');
     const errorMessage = document.getElementById('error-message');
 
-    // Clear previous content
+    // Clear previous phonogram info
     phonogramInfoDiv.style.display = 'none';
     errorMessage.style.display = 'none';
 
@@ -97,7 +106,7 @@ document.getElementById('phonogram-search-form').addEventListener('submit', func
                 errorMessage.style.display = 'block';
             } else {
                 // Populate phonogram information
-                // document.getElementById('phonogram-title').textContent = `Phonogram: ${data.phonogram}`;
+                document.getElementById('phonogram-title').textContent = `Phonogram: ${data.phonogram}`;
                 document.getElementById('phonogram-explanation').textContent = data.sample_words;
 
                 // Handle audio
