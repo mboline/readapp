@@ -109,7 +109,7 @@ document.getElementById('phonogram-search-form').addEventListener('submit', func
                 errorMessage.style.display = 'block';
             } else {
                 // Populate phonogram information
-                document.getElementById('phonogram-title').textContent = `Phonogram: ${data.phonogram}`;
+                //document.getElementById('phonogram-title').textContent = `Phonogram: ${data.phonogram}`;
                 document.getElementById('phonogram-explanation').textContent = data.sample_words;
 
                 // Handle audio
