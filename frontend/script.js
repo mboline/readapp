@@ -76,7 +76,7 @@ document.getElementById('word-form').addEventListener('submit', function(event) 
         .catch(error => {
             console.error('Error:', error);
             //errorMessage.textContent = 'Your word is not in the database. Email info@phonogramuniversity to request addition. Thanks!';
-            errorMessage.innerHTML = 'Your word is not in the database. Email <a href="mailto:info@phonogramuniversity?subject=Request%20to%20Add%20Word">info@phonogramuniversity</a> to request addition. Thanks!';
+            errorMessage.innerHTML = 'Your word is not in the database. Email <a href="mailto:info@phonogramuniversity.com?subject=Request%20to%20Add%20Word">info@phonogramuniversity</a> to request addition. Thanks!';
             errorMessage.style.display = 'block';
         });
 });
@@ -130,7 +130,7 @@ document.getElementById('phonogram-search-form').addEventListener('submit', func
         })
         .catch(error => {
             console.error('Error:', error);
-            errorMessage.textContent = 'An error occurred while fetching phonogram information.';
+            errorMessage.textContent = 'This is not a valid phonogram. Please try again.';
             errorMessage.style.display = 'block';
         });
 });
