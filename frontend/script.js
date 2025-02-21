@@ -75,7 +75,7 @@ document.getElementById('word-form').addEventListener('submit', function(event) 
         })
         .catch(error => {
             console.error('Error:', error);
-            errorMessage.textContent = 'An error occurred while fetching word information.';
+            errorMessage.textContent = 'Your word is not in the database. Email info@phonogramuniversity to request addition. Thanks!';
             errorMessage.style.display = 'block';
         });
 });
