@@ -1,112 +1,135 @@
-// Constants and references to the DOM elements
-const wordTitle = document.getElementById("word-title");
-const wordExplanation = document.getElementById("word-explanation");
-const errorMessage = document.getElementById("error-message");
-const requestedWordInput = document.getElementById("requested-word");
-const addWordForm = document.getElementById("add-word-form");
-const addWordMessage = document.getElementById("add-word-message");
-const addWordButton = document.getElementById('add-word-button');
+document.getElementById('word-form').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent the default form submission
 
-// Function to fetch word details
-function fetchWordDetails(word) {
-    console.log('Fetching word:', word); // Debugging log
+    const wordInput = document.getElementById('word-input').value.trim();
+    const wordInfoDiv = document.getElementById('word-info');
+    const phonogramSearchForm = document.getElementById('phonogram-search-form');
+    const phonogramInfoDiv = document.getElementById('phonogram-info'); // Reference to phonogram info section
+    const errorMessage = document.getElementById('error-message');
 
-    // Replace 'YOUR_API_ENDPOINT' with the actual API URL you are using
-    fetch(`YOUR_API_ENDPOINT/${word}`)
+    // Clear previous word info and phonogram info
+    wordInfoDiv.style.display = 'none';
+    phonogramSearchForm.style.display = 'none';
+    phonogramInfoDiv.style.display = 'none'; // Hide the phonogram info section
+    errorMessage.style.display = 'none';
+
+    // Clear any previously displayed phonogram data
+    document.getElementById('phonogram-title').textContent = ''; // Clear phonogram title
+    document.getElementById('phonogram-explanation').textContent = ''; // Clear phonogram explanation
+    const phonogramAudio = document.getElementById('phonogram-audio');
+    phonogramAudio.style.display = 'none'; // Hide phonogram audio controls
+    const phonogramSource = document.getElementById('phonogram-source');
+    phonogramSource.src = ''; // Reset the phonogram audio source
+
+    // Clear the phonogram search input field
+    document.getElementById('phonogram-input').value = ''; // Clear phonogram search input
+
+    console.log(`Fetching word info for: ${wordInput}`);
+
+    fetch(`/api/get-word-info?word=${encodeURIComponent(wordInput)}`)
         .then(response => {
-            console.log('Response Status:', response.status); // Log response status
-
-            // Handle 404 Not Found specifically
-            if (response.status === 404) {
-                handleWordNotFound(word);
-                return; // Early return to halt further processing
-            }
-
-            // Handle other errors
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`); // Non-404 errors
+                throw new Error(`HTTP error! Status: ${response.status}`);
             }
-
             return response.json();
         })
         .then(data => {
-            console.log('API Response:', data); // Debugging log
-            if (data && data.message) {
-                // Handle case where the response does not contain the expected data
-                handleWordNotFound(word); // Reuse the function to manage not found state
+            console.log('API response:', data);
+
+            if (data.message) {
+                // If there's a message (e.g., "Word not found"), show it as an error
+                errorMessage.textContent = data.message;
+                errorMessage.style.display = 'block';
             } else {
-                // Logic to display the found word
-                wordTitle.textContent = `Word: ${data.word}`;
-                wordExplanation.textContent = data.explanation; // Use the actual fields from your API response
-                errorMessage.style.display = 'none'; // Hide error message (if previously displayed)
+                // Populate word information
+                document.getElementById('word-title').textContent = `Word: ${data.word}`;
+                document.getElementById('word-explanation').textContent = data.decodedInfo;
+
+                // Handle image
+                const wordImage = document.getElementById('word-image');
+                if (data.imageUrl) {
+                    wordImage.src = data.imageUrl;
+                    wordImage.alt = `Decoding image for ${data.word}`;
+                    wordImage.style.display = 'block';
+                } else {
+                    wordImage.style.display = 'none';
+                }
+
+                // Handle audio
+                const wordAudio = document.getElementById('word-audio');
+                const audioSource = document.getElementById('audio-source');
+                if (data.audio_url) {
+                    audioSource.src = data.audio_url;
+                    wordAudio.style.display = 'block';
+                    wordAudio.load(); // Reload the audio element with the new source
+                } else {
+                    wordAudio.style.display = 'none';
+                }
+
+                // Show the word info section
+                wordInfoDiv.style.display = 'block';
+
+                // Show the phonogram search form
+                phonogramSearchForm.style.display = 'block';
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            errorMessage.textContent = 'An unexpected error occurred while fetching word information. Please try again later.';
+            errorMessage.textContent = 'An error occurred while fetching word information.';
             errorMessage.style.display = 'block';
         });
-}
-
-// Function to handle the case when a word is not found
-function handleWordNotFound(word) {
-    errorMessage.textContent = `The word "${word}" was not found in our database. You can request to add it by clicking the "Add Word" button.`;
-    errorMessage.style.display = 'block';
-    
-    // Prepare input for adding the requested word
-    requestedWordInput.value = word; // Store the requested word
-    addWordForm.style.display = 'block'; // Show the add word form
-    addWordMessage.style.display = 'block'; // Show message about adding the word
-}
-
-// Set up event listener for adding a word
-addWordButton.addEventListener('click', function(event) {
-    event.preventDefault(); // Prevent default form submission
-
-    const requestedWord = requestedWordInput.value.trim();
-    if (!requestedWord) {
-        alert("Please enter a word to add.");
-        return;
-    }
-
-    // Use Formspree to send the request to add the word
-    fetch('https://formspree.io/f/YOUR_FORMSPREE_ID', {
-        method: 'POST',
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ word: requestedWord })
-    })
-    .then(response => {
-        if (response.ok) {
-            alert("Your request to add the word has been submitted!");
-            requestedWordInput.value = ''; // Clear input field
-            addWordForm.style.display = 'none'; // Hide the add word form
-            addWordMessage.style.display = 'none'; // Hide the add word message
-            errorMessage.style.display = 'none'; // Hide any error message if shown
-        } else {
-            throw new Error('There was a problem submitting your request.');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert("Failed to submit your request. Please try again later.");
-    });
 });
 
-// Example function to trigger word search (should be connected to your search event)
-// make sure to attach this function to your search logic, e.g., a button or input event.
-function searchWord() {
-    const searchTerm = document.getElementById("search-input").value.trim();
-    if (searchTerm) {
-        fetchWordDetails(searchTerm);
-    } else {
-        alert("Please enter a word to search.");
-    }
-}
+document.getElementById('phonogram-search-form').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent the default form submission
 
-// Connect search function to your UI (e.g., search button or input)
-document.getElementById("search-button").addEventListener('click', (e) => {
-    e.preventDefault();
-    searchWord();
+    const phonogramInput = document.getElementById('phonogram-input').value.trim();
+    const phonogramInfoDiv = document.getElementById('phonogram-info');
+    const errorMessage = document.getElementById('error-message');
+
+    // Clear previous phonogram info
+    phonogramInfoDiv.style.display = 'none';
+    errorMessage.style.display = 'none';
+
+    console.log(`Fetching phonogram info for: ${phonogramInput}`);
+
+    fetch(`/api/search-phonogram?phonogram=${encodeURIComponent(phonogramInput)}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('API response:', data);
+
+            if (data.message) {
+                // If there's a message (e.g., "Phonogram not found"), show it as an error
+                errorMessage.textContent = data.message;
+                errorMessage.style.display = 'block';
+            } else {
+                // Populate phonogram information
+                //document.getElementById('phonogram-title').textContent = `Phonogram: ${data.phonogram}`;
+                document.getElementById('phonogram-explanation').textContent = `Sample words: ${data.sample_words}`;
+
+                // Handle audio
+                const phonogramAudio = document.getElementById('phonogram-audio');
+                const phonogramSource = document.getElementById('phonogram-source');
+                if (data.phonogram_url) {
+                    phonogramSource.src = data.phonogram_url;
+                    phonogramAudio.style.display = 'block';
+                    phonogramAudio.load(); // Reload the audio element with the new source
+                } else {
+                    phonogramAudio.style.display = 'none';
+                }
+
+                // Show the phonogram info section
+                phonogramInfoDiv.style.display = 'block';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            errorMessage.textContent = 'An error occurred while fetching phonogram information.';
+            errorMessage.style.display = 'block';
+        });
 });
