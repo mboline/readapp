@@ -133,3 +133,20 @@ document.getElementById('phonogram-search-form').addEventListener('submit', func
             errorMessage.style.display = 'block';
         });
 });
+
+// Example function to trigger word search (should be connected to your search event)
+// make sure to attach this function to your search logic, e.g., a button or input event.
+function searchWord() {
+    const searchTerm = document.getElementById("search-input").value.trim();
+    if (searchTerm) {
+        fetchWordDetails(searchTerm);
+    } else {
+        alert("Please enter a word to search.");
+    }
+}
+
+// Connect search function to your UI (e.g., search button or input)
+document.getElementById("search-button").addEventListener('click', (e) => {
+    e.preventDefault();
+    searchWord();
+});
