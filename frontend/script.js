@@ -1,33 +1,13 @@
-// Selecting DOM elements
-const wordInput = document.getElementById('word-input');
-const fetchWordButton = document.getElementById('fetch-word-button');
-const errorMessage = document.getElementById('error-message');
-const requestedWordInput = document.getElementById('requested-word-input');
-const addWordForm = document.getElementById('add-word-form');
-const addWordMessage = document.getElementById('add-word-message');
-const wordTitle = document.getElementById('word-title');
-const wordExplanation = document.getElementById('word-explanation');
+// Constants and references to the DOM elements
+const wordTitle = document.getElementById("word-title");
+const wordExplanation = document.getElementById("word-explanation");
+const errorMessage = document.getElementById("error-message");
+const requestedWordInput = document.getElementById("requested-word");
+const addWordForm = document.getElementById("add-word-form");
+const addWordMessage = document.getElementById("add-word-message");
 const addWordButton = document.getElementById('add-word-button');
 
-// Hide error messages and addition form initially
-errorMessage.style.display = 'none';
-addWordForm.style.display = 'none';
-addWordMessage.style.display = 'none';
-
-// Add event listener to fetch word details
-fetchWordButton.addEventListener('click', function() {
-    const word = wordInput.value.trim();
-    if (!word) {
-        errorMessage.textContent = 'Please enter a word.';
-        errorMessage.style.display = 'block';
-        return;
-    }
-
-    errorMessage.style.display = 'none'; // Clear previous messages
-    fetchWordDetails(word);
-});
-
-// Function to fetch word details from the API
+// Function to fetch word details
 function fetchWordDetails(word) {
     console.log('Fetching word:', word); // Debugging log
 
@@ -36,78 +16,97 @@ function fetchWordDetails(word) {
         .then(response => {
             console.log('Response Status:', response.status); // Log response status
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`); // Handle response errors
+            // Handle 404 Not Found specifically
+            if (response.status === 404) {
+                handleWordNotFound(word);
+                return; // Early return to halt further processing
             }
 
-            return response.json(); 
+            // Handle other errors
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`); // Non-404 errors
+            }
+
+            return response.json();
         })
         .then(data => {
             console.log('API Response:', data); // Debugging log
-            if (data.message) {
-                // Handle case where the word is not found
-                errorMessage.textContent = 'Your word was not found. Click the Add button to request it be added.';
-                errorMessage.style.display = 'block';
-
-                // Show the Add Word form and set the requested word
-                requestedWordInput.value = word; // Store the requested word
-                addWordForm.style.display = 'block';
-                addWordMessage.style.display = 'block';
+            if (data && data.message) {
+                // Handle case where the response does not contain the expected data
+                handleWordNotFound(word); // Reuse the function to manage not found state
             } else {
-                // Logic to display the data if found:
+                // Logic to display the found word
                 wordTitle.textContent = `Word: ${data.word}`;
-                wordExplanation.textContent = data.explanation; // Adjust based on your actual response structure
+                wordExplanation.textContent = data.explanation; // Use the actual fields from your API response
+                errorMessage.style.display = 'none'; // Hide error message (if previously displayed)
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            errorMessage.textContent = 'An error occurred while fetching word information. ' + error.message; // Include error message
+            errorMessage.textContent = 'An unexpected error occurred while fetching word information. Please try again later.';
             errorMessage.style.display = 'block';
         });
 }
 
-// Event listener for adding a word
-addWordButton.addEventListener('click', function() {
+// Function to handle the case when a word is not found
+function handleWordNotFound(word) {
+    errorMessage.textContent = `The word "${word}" was not found in our database. You can request to add it by clicking the "Add Word" button.`;
+    errorMessage.style.display = 'block';
+    
+    // Prepare input for adding the requested word
+    requestedWordInput.value = word; // Store the requested word
+    addWordForm.style.display = 'block'; // Show the add word form
+    addWordMessage.style.display = 'block'; // Show message about adding the word
+}
+
+// Set up event listener for adding a word
+addWordButton.addEventListener('click', function(event) {
+    event.preventDefault(); // Prevent default form submission
+
     const requestedWord = requestedWordInput.value.trim();
     if (!requestedWord) {
-        errorMessage.textContent = 'Please enter a word to add.';
-        errorMessage.style.display = 'block';
+        alert("Please enter a word to add.");
         return;
     }
 
-    // Here you would send a request to add the new word
-    addWord(requestedWord);
-});
-
-// Function to add a new word
-function addWord(word) {
-    console.log('Adding word:', word); // Debugging log
-
-    // Replace 'YOUR_ADD_WORD_ENDPOINT' with the actual API URL for adding words
-    fetch(`YOUR_ADD_WORD_ENDPOINT`, {
+    // Use Formspree to send the request to add the word
+    fetch('https://formspree.io/f/YOUR_FORMSPREE_ID', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json"
         },
-        body: JSON.stringify({ word: word }), // Adjust based on your API structure
+        body: JSON.stringify({ word: requestedWord })
     })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to add the word');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Add Word Response:', data); // Debugging log
-            errorMessage.textContent = 'The word has been successfully added!';
-            errorMessage.style.display = 'block';
-            addWordForm.style.display = 'none'; // Hide the add form after success
-            requestedWordInput.value = ''; // Clear the input field
-            wordInput.value = ''; // Additionally clear the main input
-        })
-        .catch(error => {
-            console.error('Error adding word:', error);
-            errorMessage.textContent = 'An error occurred while adding the word. ' + error.message;
-            errorMessage.style.display = 'block';
-        });
+    .then(response => {
+        if (response.ok) {
+            alert("Your request to add the word has been submitted!");
+            requestedWordInput.value = ''; // Clear input field
+            addWordForm.style.display = 'none'; // Hide the add word form
+            addWordMessage.style.display = 'none'; // Hide the add word message
+            errorMessage.style.display = 'none'; // Hide any error message if shown
+        } else {
+            throw new Error('There was a problem submitting your request.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert("Failed to submit your request. Please try again later.");
+    });
+});
+
+// Example function to trigger word search (should be connected to your search event)
+// make sure to attach this function to your search logic, e.g., a button or input event.
+function searchWord() {
+    const searchTerm = document.getElementById("search-input").value.trim();
+    if (searchTerm) {
+        fetchWordDetails(searchTerm);
+    } else {
+        alert("Please enter a word to search.");
+    }
 }
+
+// Connect search function to your UI (e.g., search button or input)
+document.getElementById("search-button").addEventListener('click', (e) => {
+    e.preventDefault();
+    searchWord();
+});
