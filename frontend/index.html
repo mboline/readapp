@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,19 +9,21 @@
 </head>
 <body>
     <h1>Welcome to the Reading Assistant App</h1>
+
     <!-- Form to input a word -->
     <form id="word-form">
         <label for="word-input">Enter a word:</label>
         <input type="text" id="word-input" name="word" required>
         <button type="submit">Get Word Info</button>
     </form>
+
    
     <!-- Section to display word information -->
-    <div id="word-info" style="display: none;">
+    <div id="word-info" style="display: none;"> <!-- Initially hidden -->
         <h2 id="word-title"></h2>
         <p id="word-explanation"></p>
         <img id="word-image" src="" alt="Decoding image" style="max-width: 100%; height: auto; display: none;">
-        <audio id="word-audio" controls style="display: none;">
+        <audio id="word-audio" controls style="display: none;"> <!-- Initially hidden -->
             <source id="audio-source" src="" type="audio/mpeg">
             Your browser does not support the audio element.
         </audio>
@@ -29,33 +32,25 @@
     <br>
     <hr>
     <br>
-    <!-- Form to search for a phonogram -->
-    <form id="phonogram-search-form" style="display: none;">
+     <!-- Form to search for a phonogram -->
+     <form id="phonogram-search-form" style="display: none;">
         <label for="phonogram-input">Enter a phonogram:</label>
         <input type="text" id="phonogram-input" name="phonogram" required>
         <button type="submit">Search Phonogram</button>
     </form>
+
     <!-- Section to display phonogram information -->
-    <div id="phonogram-info" style="display: none;">
+    <div id="phonogram-info" style="display: none;"> <!-- Initially hidden -->
         <h2 id="phonogram-title"></h2>
         <p id="phonogram-explanation"></p>
-        <audio id="phonogram-audio" controls style="display: none;">
+        <audio id="phonogram-audio" controls style="display: none;"> <!-- Initially hidden -->
             <source id="phonogram-source" src="" type="audio/mpeg">
             Your browser does not support the audio element.
         </audio>
     </div>
-    
+
     <!-- Error message placeholder -->
     <p id="error-message" style="color: red; display: none;"></p>
-    
-    <!-- Add Word Form -->
-    <div id="add-word-form" style="display: none;">
-        <p id="add-word-message" style="display: none;"></p>
-        <form id="request-word-form" action="https://formspree.io/xeoenovw" method="POST">
-            <input type="hidden" id="requested-word" name="requested-word">
-            <button type="submit">Add this word</button>
-        </form>
-    </div>
 
     <!-- Link to external JavaScript file -->
     <script src="script.js"></script>
