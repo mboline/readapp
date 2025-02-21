@@ -76,7 +76,7 @@ document.getElementById('word-form').addEventListener('submit', function(event) 
         .catch(error => {
             console.error('Error:', error);
             //errorMessage.textContent = 'Your word is not in the database. Email info@phonogramuniversity.com to request addition. Thanks!';
-            errorMessage.innerHTML = 'Your word is not in the database. Email <a href="mailto:info@phonogramuniversity.com?subject=Request%20to%20Add%20Word">info@phonogramuniversity</a> to request addition. Thanks!';
+            errorMessage.innerHTML = 'Your word is not in the database. Email <a href="mailto:info@phonogramuniversity.com?subject=Request%20to%20Add%20Word">info@phonogramuniversity.com</a> to request addition. Thanks!';
             errorMessage.style.display = 'block';
         });
 });
