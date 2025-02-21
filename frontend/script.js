@@ -1,17 +1,21 @@
 document.getElementById('word-form').addEventListener('submit', function(event) {
     event.preventDefault(); // Prevent the default form submission
-
     const wordInput = document.getElementById('word-input').value.trim();
     const wordInfoDiv = document.getElementById('word-info');
     const phonogramSearchForm = document.getElementById('phonogram-search-form');
     const phonogramInfoDiv = document.getElementById('phonogram-info'); // Reference to phonogram info section
     const errorMessage = document.getElementById('error-message');
+    const addWordForm = document.getElementById('add-word-form'); // Reference to the add word form
+    const addWordMessage = document.getElementById('add-word-message'); // Reference to the add word message
+    const requestedWordInput = document.getElementById('requested-word'); // Hidden input for requested word
 
     // Clear previous word info and phonogram info
     wordInfoDiv.style.display = 'none';
     phonogramSearchForm.style.display = 'none';
     phonogramInfoDiv.style.display = 'none'; // Hide the phonogram info section
     errorMessage.style.display = 'none';
+    addWordForm.style.display = 'none'; // Hide add word form initially
+    addWordMessage.style.display = 'none'; // Hide the message during the initial submission
 
     // Clear any previously displayed phonogram data
     document.getElementById('phonogram-title').textContent = ''; // Clear phonogram title
@@ -20,12 +24,10 @@ document.getElementById('word-form').addEventListener('submit', function(event) 
     phonogramAudio.style.display = 'none'; // Hide phonogram audio controls
     const phonogramSource = document.getElementById('phonogram-source');
     phonogramSource.src = ''; // Reset the phonogram audio source
-
     // Clear the phonogram search input field
     document.getElementById('phonogram-input').value = ''; // Clear phonogram search input
-
     console.log(`Fetching word info for: ${wordInput}`);
-
+    
     fetch(`/api/get-word-info?word=${encodeURIComponent(wordInput)}`)
         .then(response => {
             if (!response.ok) {
@@ -35,16 +37,20 @@ document.getElementById('word-form').addEventListener('submit', function(event) 
         })
         .then(data => {
             console.log('API response:', data);
-
             if (data.message) {
-                // If there's a message (e.g., "Word not found"), show it as an error
-                errorMessage.textContent = data.message;
+                // If there's a message (e.g., "Word not found"), show a custom error message
+                errorMessage.textContent = 'Your word was not found. Click the Add button to request it be added.';
                 errorMessage.style.display = 'block';
+                
+                // Show the add word form and set the requested word
+                requestedWordInput.value = wordInput;
+                addWordForm.style.display = 'block';
+                addWordMessage.textContent = 'Request to add this word:';
+                addWordMessage.style.display = 'block';
             } else {
                 // Populate word information
                 document.getElementById('word-title').textContent = `Word: ${data.word}`;
                 document.getElementById('word-explanation').textContent = data.decodedInfo;
-
                 // Handle image
                 const wordImage = document.getElementById('word-image');
                 if (data.imageUrl) {
@@ -54,7 +60,6 @@ document.getElementById('word-form').addEventListener('submit', function(event) 
                 } else {
                     wordImage.style.display = 'none';
                 }
-
                 // Handle audio
                 const wordAudio = document.getElementById('word-audio');
                 const audioSource = document.getElementById('audio-source');
@@ -65,10 +70,8 @@ document.getElementById('word-form').addEventListener('submit', function(event) 
                 } else {
                     wordAudio.style.display = 'none';
                 }
-
                 // Show the word info section
                 wordInfoDiv.style.display = 'block';
-
                 // Show the phonogram search form
                 phonogramSearchForm.style.display = 'block';
             }
@@ -82,17 +85,13 @@ document.getElementById('word-form').addEventListener('submit', function(event) 
 
 document.getElementById('phonogram-search-form').addEventListener('submit', function(event) {
     event.preventDefault(); // Prevent the default form submission
-
     const phonogramInput = document.getElementById('phonogram-input').value.trim();
     const phonogramInfoDiv = document.getElementById('phonogram-info');
     const errorMessage = document.getElementById('error-message');
-
     // Clear previous phonogram info
     phonogramInfoDiv.style.display = 'none';
     errorMessage.style.display = 'none';
-
     console.log(`Fetching phonogram info for: ${phonogramInput}`);
-
     fetch(`/api/search-phonogram?phonogram=${encodeURIComponent(phonogramInput)}`)
         .then(response => {
             if (!response.ok) {
@@ -102,16 +101,14 @@ document.getElementById('phonogram-search-form').addEventListener('submit', func
         })
         .then(data => {
             console.log('API response:', data);
-
             if (data.message) {
                 // If there's a message (e.g., "Phonogram not found"), show it as an error
                 errorMessage.textContent = data.message;
                 errorMessage.style.display = 'block';
             } else {
                 // Populate phonogram information
-                //document.getElementById('phonogram-title').textContent = `Phonogram: ${data.phonogram}`;
+                document.getElementById('phonogram-title').textContent = `Phonogram: ${data.phonogram}`; // Uncommenting this assumes you have phonogram title in response
                 document.getElementById('phonogram-explanation').textContent = `Sample words: ${data.sample_words}`;
-
                 // Handle audio
                 const phonogramAudio = document.getElementById('phonogram-audio');
                 const phonogramSource = document.getElementById('phonogram-source');
@@ -122,7 +119,6 @@ document.getElementById('phonogram-search-form').addEventListener('submit', func
                 } else {
                     phonogramAudio.style.display = 'none';
                 }
-
                 // Show the phonogram info section
                 phonogramInfoDiv.style.display = 'block';
             }

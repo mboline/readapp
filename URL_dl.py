@@ -11,7 +11,7 @@ cloudinary.config(
 )
 
 # Calculate the timestamp for 10 minutes ago
-ten_minutes_ago = datetime.now(pytz.UTC) - timedelta(minutes=60)
+ten_minutes_ago = datetime.now(pytz.UTC) - timedelta(minutes=40)
 
 # Get all resources (you might need to adjust max_results if you have a large number of files)
 result = cloudinary.api.resources(
