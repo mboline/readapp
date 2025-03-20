@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,9 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reading Assistant App</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Additional CSS to position the image */
+        #banner-image {
+            display: block; /* Ensures the image is treated as a block element */
+            margin: 0; /* Removes any default margin */
+            padding: 0; /* Removes any default padding */
+            position: relative; /* Allows for positioning */
+            left: 0; /* Aligns the image to the left */
+            top: 0; /* Aligns the image to the top */
+        }
+    </style>
 </head>
 <body>
+    <!-- Image at the top left of the page -->
+    <img id="banner-image" src="https://phonogramuniversity.com/wp-content/uploads/2024/03/ReadingBanner-1-1024x110.gif" alt="Reading Banner">
+
     <h1>Welcome to the Reading Assistant App</h1>
+    <h2>Brought to you by <a href="https://www.phonogramuniversity.com" target="_blank">Phonogram University</a></h2>
+
+    <hr>
+    <br>
 
     <!-- Form to input a word -->
     <form id="word-form">
@@ -17,7 +34,6 @@
         <button type="submit">Get Word Info</button>
     </form>
 
-   
     <!-- Section to display word information -->
     <div id="word-info" style="display: none;"> <!-- Initially hidden -->
         <h2 id="word-title"></h2>
@@ -32,8 +48,8 @@
     <br>
     <hr>
     <br>
-     <!-- Form to search for a phonogram -->
-     <form id="phonogram-search-form" style="display: none;">
+    <!-- Form to search for a phonogram -->
+    <form id="phonogram-search-form" style="display: none;">
         <label for="phonogram-input">Enter a phonogram:</label>
         <input type="text" id="phonogram-input" name="phonogram" required>
         <button type="submit">Search Phonogram</button>
