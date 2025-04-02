@@ -120,7 +120,7 @@ document.getElementById('phonogram-search-form').addEventListener('submit', func
                 errorMessage.textContent = data.message;
                 errorMessage.style.display = 'block';
             } else {
-                // Set the phonogram title
+                // Set the phonogram title - using the input value from the user
                 document.getElementById('phonogram-title').textContent = `Phonogram: ${phonogramInput}`;
                 
                 // Populate phonogram information
@@ -137,7 +137,7 @@ document.getElementById('phonogram-search-form').addEventListener('submit', func
                     phonogramAudio.style.display = 'none';
                 }
 
-                // Show the phonogram info section
+                // Show the phonogram info section with its title
                 phonogramInfoDiv.style.display = 'block';
             }
         })
