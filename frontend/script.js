@@ -26,17 +26,20 @@ document.getElementById('word-form').addEventListener('submit', function(event) 
     // Clear the phonogram search input field
     document.getElementById('phonogram-input').value = ''; // Clear phonogram search input
 
-    console.log(Fetching word info for: ${wordInput});
+    console.log(`Fetching word info for: ${wordInput}`);
 
-    fetch(/api/get-word-info?word=${encodeURIComponent(wordInput)})
+    fetch(`/api/get-word-info?word=${encodeURIComponent(wordInput)}`)
         .then(response => {
             if (!response.ok) {
-                throw new Error(HTTP error! Status: ${response.status});
+                throw new Error(`HTTP error! Status: ${response.status}`);
             }
             return response.json();
         })
         .then(data => {
             console.log('API response:', data);
+
+            // Clear the word input field immediately after getting the response
+            document.getElementById('word-input').value = '';
 
             if (data.message) {
                 // If there's a message (e.g., "Word not found"), show it as an error
@@ -44,14 +47,14 @@ document.getElementById('word-form').addEventListener('submit', function(event) 
                 errorMessage.style.display = 'block';
             } else {
                 // Populate word information
-                document.getElementById('word-title').textContent = Word: ${data.word};
+                document.getElementById('word-title').textContent = `Word: ${data.word}`;
                 document.getElementById('word-explanation').textContent = data.decodedInfo;
 
                 // Handle image
                 const wordImage = document.getElementById('word-image');
                 if (data.imageUrl) {
                     wordImage.src = data.imageUrl;
-                    wordImage.alt = Decoding image for ${data.word};
+                    wordImage.alt = `Decoding image for ${data.word}`;
                     wordImage.style.display = 'block';
                 } else {
                     wordImage.style.display = 'none';
@@ -79,6 +82,9 @@ document.getElementById('word-form').addEventListener('submit', function(event) 
             console.error('Error:', error);
             errorMessage.innerHTML = 'Your word is not in the database. Email <a href="mailto:info@phonogramuniversity.com?subject=Request%20to%20Add%20Word">info@phonogramuniversity.com</a> to request addition. Thanks!';
             errorMessage.style.display = 'block';
+            
+            // Clear the word input field even when there's an error
+            document.getElementById('word-input').value = '';
         });
 });
 
@@ -94,17 +100,20 @@ document.getElementById('phonogram-search-form').addEventListener('submit', func
     phonogramInfoDiv.style.display = 'none';
     errorMessage.style.display = 'none';
 
-    console.log(Fetching phonogram info for: ${phonogramInput});
+    console.log(`Fetching phonogram info for: ${phonogramInput}`);
 
-    fetch(/api/search-phonogram?phonogram=${encodeURIComponent(phonogramInput)})
+    fetch(`/api/search-phonogram?phonogram=${encodeURIComponent(phonogramInput)}`)
         .then(response => {
             if (!response.ok) {
-                throw new Error(HTTP error! Status: ${response.status});
+                throw new Error(`HTTP error! Status: ${response.status}`);
             }
             return response.json();
         })
         .then(data => {
             console.log('API response:', data);
+            
+            // Clear the phonogram input field immediately after getting the response
+            document.getElementById('phonogram-input').value = '';
 
             if (data.message) {
                 // If there's a message (e.g., "Phonogram not found"), show it as an error
@@ -112,7 +121,7 @@ document.getElementById('phonogram-search-form').addEventListener('submit', func
                 errorMessage.style.display = 'block';
             } else {
                 // Populate phonogram information
-                document.getElementById('phonogram-explanation').textContent = Sample words: ${data.sample_words};
+                document.getElementById('phonogram-explanation').textContent = `Sample words: ${data.sample_words}`;
 
                 // Handle audio
                 const phonogramAudio = document.getElementById('phonogram-audio');
@@ -133,6 +142,9 @@ document.getElementById('phonogram-search-form').addEventListener('submit', func
             console.error('Error:', error);
             errorMessage.textContent = 'This is not a valid phonogram. Please try again.';
             errorMessage.style.display = 'block';
+            
+            // Clear the phonogram input field even when there's an error
+            document.getElementById('phonogram-input').value = '';
         });
 });
 
@@ -164,11 +176,14 @@ document.getElementById('randomWordButton').addEventListener('click', function()
 
     // Optionally, you can also clear the phonogram input field
     document.getElementById('phonogram-input').value = ''; // Clear phonogram search input
+    
+    // Clear the word input field
+    document.getElementById('word-input').value = '';
 
     fetch('/random_word')
         .then(response => {
             if (!response.ok) {
-                throw new Error(HTTP error! Status: ${response.status});
+                throw new Error(`HTTP error! Status: ${response.status}`);
             }
             return response.json();
         })
@@ -182,7 +197,7 @@ document.getElementById('randomWordButton').addEventListener('click', function()
             } else {
                 // Only display the random word
                 currentRandomWord = data.word; // Store the current random word
-                document.getElementById('word-title').textContent = Random Word: ${currentRandomWord};
+                document.getElementById('word-title').textContent = `Random Word: ${currentRandomWord}`;
                 
                 // Show the button to get info for the random word
                 document.getElementById('getRandomWordInfoButton').style.display = 'block';
@@ -200,12 +215,12 @@ document.getElementById('randomWordButton').addEventListener('click', function()
 
 // Event listener for the button to get info for the random word
 document.getElementById('getRandomWordInfoButton').addEventListener('click', function() {
-    console.log(Fetching info for the random word: ${currentRandomWord});
+    console.log(`Fetching info for the random word: ${currentRandomWord}`);
 
-    fetch(/api/get-word-info?word=${encodeURIComponent(currentRandomWord)})
+    fetch(`/api/get-word-info?word=${encodeURIComponent(currentRandomWord)}`)
         .then(response => {
             if (!response.ok) {
-                throw new Error(HTTP error! Status: ${response.status});
+                throw new Error(`HTTP error! Status: ${response.status}`);
             }
             return response.json();
         })
@@ -221,14 +236,14 @@ document.getElementById('getRandomWordInfoButton').addEventListener('click', fun
                 errorMessage.style.display = 'block';
             } else {
                 // Populate word information
-                document.getElementById('word-title').textContent = Word: ${data.word};
+                document.getElementById('word-title').textContent = `Word: ${data.word}`;
                 document.getElementById('word-explanation').textContent = data.decodedInfo;
 
                 // Handle image
                 const wordImage = document.getElementById('word-image');
                 if (data.imageUrl) {
                     wordImage.src = data.imageUrl;
-                    wordImage.alt = Decoding image for ${data.word};
+                    wordImage.alt = `Decoding image for ${data.word}`;
                     wordImage.style.display = 'block';
                 } else {
                     wordImage.style.display = 'none';
