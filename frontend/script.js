@@ -142,8 +142,6 @@ document.getElementById('randomWordButton').addEventListener('click', function()
 
     // Clear previous word info before fetching a new random word
     const wordInfoDiv = document.getElementById('word-info');
-    const phonogramSearchForm = document.getElementById('phonogram-search-form');
-    const phonogramInfoDiv = document.getElementById('phonogram-info');
     const errorMessage = document.getElementById('error-message');
 
     // Clear previous word info
