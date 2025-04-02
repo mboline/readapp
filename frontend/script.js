@@ -140,7 +140,7 @@ document.getElementById('phonogram-search-form').addEventListener('submit', func
 document.getElementById('randomWordButton').addEventListener('click', function() {
     console.log('Fetching a random word from the database.');
 
-    // Clear previous word info and phonogram info before fetching a new random word
+    // Clear previous word info before fetching a new random word
     const wordInfoDiv = document.getElementById('word-info');
     const phonogramSearchForm = document.getElementById('phonogram-search-form');
     const phonogramInfoDiv = document.getElementById('phonogram-info');
@@ -148,8 +148,6 @@ document.getElementById('randomWordButton').addEventListener('click', function()
 
     // Clear previous word info
     wordInfoDiv.style.display = 'none'; // Hide the word info section
-    phonogramSearchForm.style.display = 'none'; // Hide the phonogram search form
-    phonogramInfoDiv.style.display = 'none'; // Hide the phonogram info section
     errorMessage.style.display = 'none'; // Hide any previous error messages
 
     // Clear any previously displayed word data
@@ -158,13 +156,16 @@ document.getElementById('randomWordButton').addEventListener('click', function()
     document.getElementById('word-image').style.display = 'none'; // Hide the word image
     document.getElementById('word-audio').style.display = 'none'; // Hide the audio controls
 
-    // Clear phonogram data
+    // Clear phonogram data without hiding the phonogram search form
     document.getElementById('phonogram-title').textContent = ''; // Clear phonogram title
     document.getElementById('phonogram-explanation').textContent = ''; // Clear phonogram explanation
     const phonogramAudio = document.getElementById('phonogram-audio');
     phonogramAudio.style.display = 'none'; // Hide phonogram audio controls
     const phonogramSource = document.getElementById('phonogram-source');
     phonogramSource.src = ''; // Reset the phonogram audio source
+
+    // Optionally, you can also clear the phonogram input field
+    document.getElementById('phonogram-input').value = ''; // Clear phonogram search input
 
     fetch('/random_word')
         .then(response => {
