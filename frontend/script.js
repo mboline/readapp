@@ -120,6 +120,9 @@ document.getElementById('phonogram-search-form').addEventListener('submit', func
                 errorMessage.textContent = data.message;
                 errorMessage.style.display = 'block';
             } else {
+                // Set the phonogram title
+                document.getElementById('phonogram-title').textContent = `Phonogram: ${phonogramInput}`;
+                
                 // Populate phonogram information
                 document.getElementById('phonogram-explanation').textContent = `Sample words: ${data.sample_words}`;
 
