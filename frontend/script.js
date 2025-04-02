@@ -161,44 +161,11 @@ document.getElementById('randomWordButton').addEventListener('click', function()
                 errorMessage.textContent = data.message;
                 errorMessage.style.display = 'block';
             } else {
-                // Populate word information for the random word
+                // Only display the random word
                 document.getElementById('word-title').textContent = `Random Word: ${data.word}`;
-                // Optionally, you can fetch and display additional info here if needed
-                // For example, you could call the existing fetch function for word info
-                fetch(`/api/get-word-info?word=${encodeURIComponent(data.word)}`)
-                    .then(response => response.json())
-                    .then(wordData => {
-                        if (wordData.message) {
-                            errorMessage.textContent = wordData.message;
-                            errorMessage.style.display = 'block';
-                        } else {
-                            document.getElementById('word-explanation').textContent = wordData.decodedInfo;
-
-                            // Handle image
-                            const wordImage = document.getElementById('word-image');
-                            if (wordData.imageUrl) {
-                                wordImage.src = wordData.imageUrl;
-                                wordImage.alt = `Decoding image for ${wordData.word}`;
-                                wordImage.style.display = 'block';
-                            } else {
-                                wordImage.style.display = 'none';
-                            }
-
-                            // Handle audio
-                            const wordAudio = document.getElementById('word-audio');
-                            const audioSource = document.getElementById('audio-source');
-                            if (wordData.audio_url) {
-                                audioSource.src = wordData.audio_url;
-                                wordAudio.style.display = 'block';
-                                wordAudio.load(); // Reload the audio element with the new source
-                            } else {
-                                wordAudio.style.display = 'none';
-                            }
-
-                            // Show the word info section
-                            wordInfoDiv.style.display = 'block';
-                        }
-                    });
+                
+                // Show the word info section
+                wordInfoDiv.style.display = 'block';
             }
         })
         .catch(error => {
