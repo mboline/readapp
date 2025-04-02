@@ -142,6 +142,8 @@ document.getElementById('randomWordButton').addEventListener('click', function()
 
     // Clear previous word info before fetching a new random word
     const wordInfoDiv = document.getElementById('word-info');
+    const phonogramSearchForm = document.getElementById('phonogram-search-form');
+    const phonogramInfoDiv = document.getElementById('phonogram-info');
     const errorMessage = document.getElementById('error-message');
 
     // Clear previous word info
@@ -162,7 +164,7 @@ document.getElementById('randomWordButton').addEventListener('click', function()
     const phonogramSource = document.getElementById('phonogram-source');
     phonogramSource.src = ''; // Reset the phonogram audio source
 
-    // Optionally, you can also clear the phonogram input field
+    // Clear the phonogram input field
     document.getElementById('phonogram-input').value = ''; // Clear phonogram search input
 
     fetch('/random_word')
@@ -194,64 +196,6 @@ document.getElementById('randomWordButton').addEventListener('click', function()
         .catch(error => {
             console.error('Error:', error);
             errorMessage.textContent = 'Error fetching random word. Please try again.';
-            errorMessage.style.display = 'block';
-        });
-});
-
-// Event listener for the button to get info for the random word
-document.getElementById('getRandomWordInfoButton').addEventListener('click', function() {
-    console.log(`Fetching info for the random word: ${currentRandomWord}`);
-
-    fetch(`/api/get-word-info?word=${encodeURIComponent(currentRandomWord)}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Random word info API response:', data);
-
-            const wordInfoDiv = document.getElementById('word-info');
-            const errorMessage = document.getElementById('error-message');
-
-            if (data.message) {
-                // If there's a message (e.g., "Word not found"), show it as an error
-                errorMessage.textContent = data.message;
-                errorMessage.style.display = 'block';
-            } else {
-                // Populate word information
-                document.getElementById('word-title').textContent = `Word: ${data.word}`;
-                document.getElementById('word-explanation').textContent = data.decodedInfo;
-
-                // Handle image
-                const wordImage = document.getElementById('word-image');
-                if (data.imageUrl) {
-                    wordImage.src = data.imageUrl;
-                    wordImage.alt = `Decoding image for ${data.word}`;
-                    wordImage.style.display = 'block';
-                } else {
-                    wordImage.style.display = 'none';
-                }
-
-                // Handle audio
-                const wordAudio = document.getElementById('word-audio');
-                const audioSource = document.getElementById('audio-source');
-                if (data.audio_url) {
-                    audioSource.src = data.audio_url;
-                    wordAudio.style.display = 'block';
-                    wordAudio.load(); // Reload the audio element with the new source
-                } else {
-                    wordAudio.style.display = 'none';
-                }
-
-                // Show the word info section
-                wordInfoDiv.style.display = 'block';
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            errorMessage.textContent = 'Error fetching word info. Please try again.';
             errorMessage.style.display = 'block';
         });
 });
