@@ -213,6 +213,9 @@ document.getElementById('randomWordButton').addEventListener('click', function()
 document.getElementById('getRandomWordInfoButton').addEventListener('click', function() {
     console.log(`Fetching info for the random word: ${currentRandomWord}`);
 
+    // Hide the button immediately after it's clicked
+    document.getElementById('getRandomWordInfoButton').style.display = 'none';
+
     fetch(`/api/get-word-info?word=${encodeURIComponent(currentRandomWord)}`)
         .then(response => {
             if (!response.ok) {
