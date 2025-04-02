@@ -140,6 +140,16 @@ document.getElementById('phonogram-search-form').addEventListener('submit', func
 document.getElementById('randomWordButton').addEventListener('click', function() {
     console.log('Fetching a random word from the database.');
 
+    // Clear previous word info before fetching a new random word
+    const wordInfoDiv = document.getElementById('word-info');
+    const errorMessage = document.getElementById('error-message');
+    wordInfoDiv.style.display = 'none'; // Hide the word info section
+    errorMessage.style.display = 'none'; // Hide any previous error messages
+    document.getElementById('word-title').textContent = ''; // Clear the word title
+    document.getElementById('word-explanation').textContent = ''; // Clear the word explanation
+    document.getElementById('word-image').style.display = 'none'; // Hide the word image
+    document.getElementById('word-audio').style.display = 'none'; // Hide the audio controls
+
     fetch('/random_word')
         .then(response => {
             if (!response.ok) {
@@ -149,14 +159,6 @@ document.getElementById('randomWordButton').addEventListener('click', function()
         })
         .then(data => {
             console.log('Random word API response:', data);
-
-            // Display the random word
-            const wordInfoDiv = document.getElementById('word-info');
-            const errorMessage = document.getElementById('error-message');
-
-            // Clear previous word info
-            wordInfoDiv.style.display = 'none';
-            errorMessage.style.display = 'none';
 
             if (data.message) {
                 // If there's a message (e.g., "No words found"), show it as an error
