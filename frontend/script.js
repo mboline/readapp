@@ -75,12 +75,12 @@ document.getElementById('word-form').addEventListener('submit', function(event) 
         })
         .catch(error => {
             console.error('Error:', error);
-            //errorMessage.textContent = 'Your word is not in the database. Email info@phonogramuniversity.com to request addition. Thanks!';
             errorMessage.innerHTML = 'Your word is not in the database. Email <a href="mailto:info@phonogramuniversity.com?subject=Request%20to%20Add%20Word">info@phonogramuniversity.com</a> to request addition. Thanks!';
             errorMessage.style.display = 'block';
         });
 });
 
+// Event listener for the phonogram search form
 document.getElementById('phonogram-search-form').addEventListener('submit', function(event) {
     event.preventDefault(); // Prevent the default form submission
 
@@ -110,7 +110,6 @@ document.getElementById('phonogram-search-form').addEventListener('submit', func
                 errorMessage.style.display = 'block';
             } else {
                 // Populate phonogram information
-                //document.getElementById('phonogram-title').textContent = `Phonogram: ${data.phonogram}`;
                 document.getElementById('phonogram-explanation').textContent = `Sample words: ${data.sample_words}`;
 
                 // Handle audio
@@ -135,19 +134,76 @@ document.getElementById('phonogram-search-form').addEventListener('submit', func
         });
 });
 
-// Example function to trigger word search (should be connected to your search event)
-// make sure to attach this function to your search logic, e.g., a button or input event.
-function searchWord() {
-    const searchTerm = document.getElementById("search-input").value.trim();
-    if (searchTerm) {
-        fetchWordDetails(searchTerm);
-    } else {
-        alert("Please enter a word to search.");
-    }
-}
+// Event listener for the random word button
+document.getElementById('randomWordButton').addEventListener('click', function() {
+    console.log('Fetching a random word from the database.');
 
-// Connect search function to your UI (e.g., search button or input)
-document.getElementById("search-button").addEventListener('click', (e) => {
-    e.preventDefault();
-    searchWord();
+    fetch('/random_word')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Random word API response:', data);
+
+            // Display the random word
+            const wordInfoDiv = document.getElementById('word-info');
+            const errorMessage = document.getElementById('error-message');
+
+            // Clear previous word info
+            wordInfoDiv.style.display = 'none';
+            errorMessage.style.display = 'none';
+
+            if (data.message) {
+                // If there's a message (e.g., "No words found"), show it as an error
+                errorMessage.textContent = data.message;
+                errorMessage.style.display = 'block';
+            } else {
+                // Populate word information for the random word
+                document.getElementById('word-title').textContent = `Random Word: ${data.word}`;
+                // Optionally, you can fetch and display additional info here if needed
+                // For example, you could call the existing fetch function for word info
+                fetch(`/api/get-word-info?word=${encodeURIComponent(data.word)}`)
+                    .then(response => response.json())
+                    .then(wordData => {
+                        if (wordData.message) {
+                            errorMessage.textContent = wordData.message;
+                            errorMessage.style.display = 'block';
+                        } else {
+                            document.getElementById('word-explanation').textContent = wordData.decodedInfo;
+
+                            // Handle image
+                            const wordImage = document.getElementById('word-image');
+                            if (wordData.imageUrl) {
+                                wordImage.src = wordData.imageUrl;
+                                wordImage.alt = `Decoding image for ${wordData.word}`;
+                                wordImage.style.display = 'block';
+                            } else {
+                                wordImage.style.display = 'none';
+                            }
+
+                            // Handle audio
+                            const wordAudio = document.getElementById('word-audio');
+                            const audioSource = document.getElementById('audio-source');
+                            if (wordData.audio_url) {
+                                audioSource.src = wordData.audio_url;
+                                wordAudio.style.display = 'block';
+                                wordAudio.load(); // Reload the audio element with the new source
+                            } else {
+                                wordAudio.style.display = 'none';
+                            }
+
+                            // Show the word info section
+                            wordInfoDiv.style.display = 'block';
+                        }
+                    });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            errorMessage.textContent = 'Error fetching random word. Please try again.';
+            errorMessage.style.display = 'block';
+        });
 });
