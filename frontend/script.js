@@ -5,13 +5,11 @@ document.getElementById('word-form').addEventListener('submit', function(event) 
 
     const wordInput = document.getElementById('word-input').value.trim();
     const wordInfoDiv = document.getElementById('word-info');
-    const phonogramSearchForm = document.getElementById('phonogram-search-form');
     const phonogramInfoDiv = document.getElementById('phonogram-info'); // Reference to phonogram info section
     const errorMessage = document.getElementById('error-message');
 
     // Clear previous word info and phonogram info
     wordInfoDiv.style.display = 'none';
-    phonogramSearchForm.style.display = 'none';
     phonogramInfoDiv.style.display = 'none'; // Hide the phonogram info section
     errorMessage.style.display = 'none';
 
@@ -22,9 +20,6 @@ document.getElementById('word-form').addEventListener('submit', function(event) 
     phonogramAudio.style.display = 'none'; // Hide phonogram audio controls
     const phonogramSource = document.getElementById('phonogram-source');
     phonogramSource.src = ''; // Reset the phonogram audio source
-
-    // Clear the phonogram search input field
-    document.getElementById('phonogram-input').value = ''; // Clear phonogram search input
 
     console.log(`Fetching word info for: ${wordInput}`);
 
@@ -73,9 +68,6 @@ document.getElementById('word-form').addEventListener('submit', function(event) 
 
                 // Show the word info section
                 wordInfoDiv.style.display = 'block';
-
-                // Show the phonogram search form
-                phonogramSearchForm.style.display = 'block';
             }
         })
         .catch(error => {
@@ -176,6 +168,7 @@ document.getElementById('randomWordButton').addEventListener('click', function()
     phonogramAudio.style.display = 'none'; // Hide phonogram audio controls
     const phonogramSource = document.getElementById('phonogram-source');
     phonogramSource.src = ''; // Reset the phonogram audio source
+    document.getElementById('phonogram-info').style.display = 'none'; // Hide phonogram info section
 
     // Optionally, you can also clear the phonogram input field
     document.getElementById('phonogram-input').value = ''; // Clear phonogram search input
